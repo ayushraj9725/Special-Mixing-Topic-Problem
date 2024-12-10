@@ -1,0 +1,127 @@
+Problem : 2981. Find Longest Special Substring That Occurs Thrice I : Link : https://leetcode.com/problems/find-longest-special-substring-that-occurs-thrice-i/?envType=daily-question&envId=2024-12-10
+
+Problem Statement : 
+You are given a string s that consists of lowercase English letters.
+
+A string is called special if it is made up of only a single character. For example, the string "abc" is not special, whereas the strings "ddd", "zz", and "f" are special.
+
+Return the length of the longest special substring of s which occurs at least thrice, or -1 if no special substring occurs at least thrice.
+A substring is a contiguous non-empty sequence of characters within a string.
+
+Example 1:
+Input: s = "aaaa"
+Output: 2
+Explanation: The longest special substring which occurs thrice is "aa": substrings "aaaa", "aaaa", and "aaaa".
+It can be shown that the maximum length achievable is 2.
+
+Example 2:
+Input: s = "abcdef"
+Output: -1
+Explanation: There exists no special substring which occurs at least thrice. Hence return -1.
+
+Example 3:
+Input: s = "abcaba"
+Output: 1
+Explanation: The longest special substring which occurs thrice is "a": substrings "abcaba", "abcaba", and "abcaba".
+It can be shown that the maximum length achievable is 1.
+ 
+Constraints:
+3 <= s.length <= 50
+s consists of only lowercase English letters. 
+
+/*********************************************************/
+SOLUTION ALL TYPE BRUTE AND OPTIMIZED                                                             // OPTIMIZED SOLUTION // 
+
+
+class Solution {
+    private static boolean isSpecial(String s) {
+        // Check if all characters in the string are the same
+        char firstChar = s.charAt(0);
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) != firstChar) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean isValid(String str , int length){
+         // we are taking hashmap for storing the key and value ,where key is string and vale is freq
+         HashMap<String,Integer> cntStr = new HashMap<>();
+         // now using sliding windows check all the possible substring of particular length
+         for(int i = 0 ; i <= str.length() - length ; i++){ // check till only 
+               String subStr = str.substring(i,i+length); // sliding window check for only till the last bound , if goes out from the right then trim from left , if din't understand plz dry run 
+            if (isSpecial(subStr)) { // Ensure the substring is "special"
+                cntStr.put(subStr,cntStr.getOrDefault(subStr,0) + 1);
+                if(cntStr.get(subStr) >= 3){  // found the criteria then return the true
+                  return true ;
+               }
+            }
+         }  
+         return false ; // other wise return false 
+
+    }
+    public int maximumLength(String s) {
+    // Optimal Solution : Using Binary Search and Sliding Window
+     // first of all we have to identify the pattern how i can apply the Binary search , what we want to do find out the maximum possible length of that special substring (means longest substring length)
+     // the possible length will be definately belong in range of 1 to n that is length of given substring at max . so insteade of all the length of substring check one by one 1 to N , we can only check for the possible using binary search appling if found length possible take it and check for another by triming left side bcz we finding max , if not found then trim right .
+            int n = s.length();
+            int low = 1 , high = n ;
+            int result = -1 ; // start from -1 if not found then return -1 
+            while(low <= high){
+                int mid = low + (high - low)/2 ; // mid is here length of the being possible subsr
+
+                if(isValid(s,mid)){ // we are checking valid or not special substring if yes take it and check for the another length that is max than this taken so trim left part
+                    result = mid ; // this is the possible length
+                    low = mid + 1 ; // trim left side 
+
+                }else high = mid - 1 ; // otherwise found not possible length so trim the right part
+            }
+         // at the end of the day we will return the final answe after the end of the binary search 
+         return result ; 
+         // Time complexity : O(logn * n * L) n for inside loop sliding windows and logn for binary search  , where  L  is checking all the possible special substring
+         // Space complexity : O(N) for HashMap storing String and Frequency inner case for valid func
+
+
+
+/**********************************************************/                                      // BRUTE FORCE SOLUTION //
+
+
+        /*
+          // Here we have to see all the special substring and then track frequency of all the generated substring , so use HashMap for doing this 
+          // this is Brute force Solution 
+          HashMap<String,Integer> hm = new HashMap<>();
+          int n = s.length();
+          for(int i = 0 ; i < n ; i++){
+            // take a stringBuilder for generating all substring 
+              StringBuilder curString = new StringBuilder();
+              for(int j = i ; j < n ; j ++) {
+              if(curString.length() == 0 || s.charAt(j) == curString.charAt(curString.length()-1)){
+                  curString.append(s.charAt(j));
+                  // add into current String that character before adding into hasmap we haveto convert
+                  String curStr = curString.toString();
+                  hm.put(curStr,hm.getOrDefault(curStr,0)+1); // setting the frequency 
+               // and increment the j and check if this time also special substring then add 
+              } // if not then terminate . go outside to the while loop and start from next check i++
+              else{
+                break ;
+              }
+            }
+          }
+          // iterate the hashmap then check the maximum criteria for triplet frequency 
+          int result = -1 ;
+          for(Map.Entry<String,Integer> entry : hm.entrySet()){
+            String str = entry.getKey(); // checking hashmap key that is string 
+            int tripletCond = entry.getValue();
+             if(tripletCond >= 3){
+                result = Math.max(result,str.length());
+             }
+          }
+          return result ;
+         // Time complexity : O(N * N * L )  here nested loop using here we done all the task Because here the constrains is too small so time not exceeding , l is generating substring converting into string using toString  // For a substring of length 𝐿 , the toString() operation takes 𝑂(𝐿)O(L) time.
+This means that for each iteration of the inner loop, there is an additional 𝑂(𝐿)
+O(L) cost for creating the substring and storing it in the HashMap.
+         // Space Complexity : O(N) for using hashmap to stored the key and value frequency 
+          */
+
+    }
+}

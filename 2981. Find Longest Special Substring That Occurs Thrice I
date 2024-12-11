@@ -30,6 +30,7 @@ Constraints:
 s consists of only lowercase English letters. 
 
 /*********************************************************/
+
 SOLUTION ALL TYPE BRUTE AND OPTIMIZED                                                             // OPTIMIZED SOLUTION // 
 
 
@@ -125,3 +126,54 @@ O(L) cost for creating the substring and storing it in the HashMap.
 
     }
 }
+
+/*********************************************/                    // Most Optimal But Failded in some case //
+
+ public int maximumLength(String s) {
+        // Most Optimal soluton : using Sliding windows and Hashing , we want to count the maxi length special substring 
+        // 1st step to check every contigious special substring ,that helps a pointer only move when we have new starting contigious special string , so we are taking a pointer i .
+        HashMap<Integer,Integer> hm = new HashMap<>();
+         HashMap<Character, Integer> charFreq = new HashMap<>();
+        int n = s.length();
+        int i = 0 ;
+        while(i < n){ // this will run only for i and i only update when found the mismatch substring
+             char currentChar = s.charAt(i); // take a new character which is strating char of new special substring , and then take j for checking next and again next 
+             int j = i + 1 ;
+             // take j pointer for check contigious special substring
+             while(j < n && s.charAt(j) == currentChar){ // this run till the same character found 
+                 j++ ; // j increase why , bcz we need to check what is the length of contigious special substring ,here 1step is done , now calculate the actual length of s s ,that help this 
+             }
+             // 2nd step calculate the exact length of substing special
+             int length = j - i ; // here the actual length 
+             // 3rd step 
+             // now using sliding window we are checking the how many times that occure in substring
+             if(length > 1){
+             for(int k = 1 ; k <= length ; k++){
+                hm.put(k,hm.getOrDefault(k,0) + (length - k + 1)); 
+                // here we are setting all the frequency of 1 to length ,  how many times occuring 
+             }
+             }
+               // Step for individual : Track frequency of individual characters
+            charFreq.put(currentChar, charFreq.getOrDefault(currentChar, 0) + 1);
+             // now 4th step i update by j value , bcz we have to move i. when start special substring point at there starting point suppose "aaaab" b is starting of new substring so i direct move to this from 1st index of previous that is 0th ind pointer a starting 
+             i = j ; 
+        }
+       // now 5th step // Find the longest substring with frequency >= 3
+       int maxLength = -1 ;
+       for(int key : hm.keySet()){
+           if(hm.get(key) >= 3){
+             maxLength = Math.max(maxLength,key); // because key is the length of substring special occure how many time that stored in hash value
+           }
+       }
+       // exp : If no special substring with length >= 2 occurs 3 times, check individual characters
+        if (maxLength == -1) {
+            for (int count : charFreq.values()) {
+                if (count >= 3) {
+                    return 1; // Return 1 if any character occurs 3 or more times
+                }
+            }
+        }
+      // now return the result that is maxLength .
+        return maxLength ;
+
+

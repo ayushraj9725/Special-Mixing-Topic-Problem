@@ -1,0 +1,125 @@
+Problem Link : https://leetcode.com/problems/find-score-of-an-array-after-marking-all-elements/description/?envType=daily-question&envId=2024-12-13
+Problem :  Find Score of an Array After Marking All Elements
+
+Problem Statement : 
+You are given an array nums consisting of positive integers.
+Starting with score = 0, apply the following algorithm:
+
+
+Choose the smallest integer of the array that is not marked. If there is a tie, choose the one with the smallest index.
+Add the value of the chosen integer to score.
+Mark the chosen element and its two adjacent elements if they exist.
+Repeat until all the array elements are marked.
+Return the score you get after applying the above algorithm.
+
+
+
+/**********************************************************/
+
+class Solution {
+    public long findScore(int[] nums) {
+    /*    int n = nums.length;
+        boolean[] marked = new boolean[n];  // we are taking boolean array for marking the array 
+        
+        // Create an array of pairs (value, index)
+        List<int[]> pairs = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            pairs.add(new int[] {nums[i], i});
+        }
+        
+        // Sort pairs by value, and by index if values are the same
+      //  pairs.sort((a, b) -> a[0] != b[0] ? Integer.compare(a[0], b[0]) : Integer.compare(a[1], b[1]));
+        Collections.sort(pairs,(a,b) -> a[0] - b[0]) ; // we avoide the index sorting, it already sortd
+        long score = 0;
+        // Process the sorted pairs
+        for (int[] pair : pairs) {
+            int value = pair[0];
+            int index = pair[1];
+            
+            // If the current element is not marked, add to the score and mark it and its neighbors
+            if (!marked[index]) {
+                score += value;
+                marked[index] = true;
+                if (index > 0) {
+                    marked[index - 1] = true;
+                }
+                if (index < n - 1) {
+                    marked[index + 1] = true;
+                }
+            }
+        }
+        
+        return score;  // time comp : O(2N) and space O(2N) .and sorting O(nlogn)
+   */
+
+        // Beacause here array the constrains is given nums[i] always > 1 so we can mark it with -ve instead of taking n size boolean array  .
+        
+        // Optimal solution 2  : 
+      /*      int n = nums.length ;
+            // taking the value and index for storing , so that we can marks axectly 
+            int pair[][] = new int[n][2];
+            // insearting value into the array pair with value and index 
+            for(int i = 0 ;i < n ; i++){
+                pair[i][0] = nums[i] ; // at first place stored value
+                pair[i][1] = i ; // index placed at pair second value .
+            }
+            // now we iterate pair and sort 
+            Arrays.sort(pair,(a,b) -> a[0] - b[0]);
+            //now iterate over the array nums and marks those value 
+            long score = 0 ;
+            for(int i = 0 ; i < n ; i++){
+                int value = pair[i][0];
+                int index = pair[i][1] ;
+
+                if(nums[index] < 0 ) continue ;
+                score += value ;
+                // now mark the values 
+                nums[index] = -nums[index]; // marks the index value 
+                if(index - 1 >= 0 && nums[index - 1] > 0) { // marking the before index value if it is not markd already ,and idex greater than zero
+                     nums[index - 1] = -nums[index - 1];
+                }
+                if(index + 1 < n && nums[index + 1] > 0){
+                    // marks after index next value if idex is greater and if not marks 
+                     nums[index + 1] = -nums[index + 1];
+                }
+            }   // after the end of the day we will get the ansed 
+          return score ;
+
+          */   
+          // 3rd optimal solution  
+
+        int n = nums.length;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> a[0] - b[0]); // we can sort like both
+        // PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> {
+        //     if(a[0] == b[0]) return Integer.compare(a[1],b[1]);
+        //     else return Integer.compare(a[0],b[0]);
+        // }) ; // add as sort 
+           // Add all elements with their indices to the priority queue
+        for (int i = 0; i < n; i++) {
+            pq.offer(new int[]{nums[i], i});
+        }
+
+        long score = 0;
+
+        // Process the priority queue
+        while (!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int value = current[0];
+            int index = current[1];
+
+            // Skip if already marked (value is negative)
+            if (nums[index] < 0) continue;
+
+            // Add the value to the score and mark the element and its neighbors
+            score += value;
+            nums[index] = -nums[index]; // Mark the current element
+            if (index > 0 && nums[index-1] > 0) nums[index - 1] = -nums[index - 1]; // Mark left neighbor
+            if (index < n - 1 && nums[index+1] > 0) nums[index + 1] = -nums[index + 1]; // Mark right neighbor
+        }
+
+        return score;
+    }
+}
+
+
+/******************************************************************/

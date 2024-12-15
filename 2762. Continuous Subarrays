@@ -1,0 +1,99 @@
+Problem : 2762. Continuous Subarrays : link : https://leetcode.com/problems/continuous-subarrays/description/?envType=daily-question&envId=2024-12-14 
+
+Problem Statement : 
+You are given a 0-indexed integer array nums. A subarray of nums is called continuous if:
+Let i, i + 1, ..., j be the indices in the subarray. Then, for each pair of indices i <= i1, i2 <= j, 0 <= |nums[i1] - nums[i2]| <= 2.
+Return the total number of continuous subarrays.
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+Example 1:
+
+Input: nums = [5,4,2,4]
+Output: 8
+Explanation: 
+Continuous subarray of size 1: [5], [4], [2], [4].
+Continuous subarray of size 2: [5,4], [4,2], [2,4].
+Continuous subarray of size 3: [4,2,4].
+Thereare no subarrys of size 4.
+Total continuous subarrays = 4 + 3 + 1 = 8.
+It can be shown that there are no more continuous subarrays.
+ 
+
+Example 2:
+
+Input: nums = [1,2,3]
+Output: 6
+Explanation: 
+Continuous subarray of size 1: [1], [2], [3].
+Continuous subarray of size 2: [1,2], [2,3].
+Continuous subarray of size 3: [1,2,3].
+Total continuous subarrays = 3 + 2 + 1 = 6.
+
+
+/***************************************************************************************************************/
+
+Code :
+class Solution {
+    public long continuousSubarrays(int[] nums) {
+         // Brute force Solution : Generating all the subsarray and find that it takes O(N^2) and O(N^2)
+         // Better solution use 2 PriorityQuey find max and min always track and calculate the difference , use sliding windows for variable , find the subaray count using expanding and shrinking 
+        // but instead of priorityQueue we can use treemap and take min , max from it in one treemap 
+
+/*
+         TreeMap<Integer,Integer> tm = new TreeMap<>();
+         // take start and end two pointers for expanding and shrinking
+         int start = 0 ; //start and end both start from 0 index 
+         int end = 0 ;
+         int n = nums.length ;
+         long count = 0 ;
+         while(end < n){
+            // first of all put element in treemap 
+            tm.put(nums[end] , tm.getOrDefault(nums[end],0) + 1);
+            // check for shrinking the windows
+            while(tm.lastEntry().getKey() - tm.firstEntry().getKey() > 2){  // if found the greater then max and min difference then we sure about the shrinking from left most last value 
+               // start++ ;
+                // and do treemap key value negative
+                tm.put(nums[start] , tm.getOrDefault(nums[start],0) - 1);
+                if(tm.get(nums[start]) == 0){
+                    tm.remove(nums[start]) ; // if found key value 0 then remove that key
+                }
+                start++ ; // now do start increment 
+            }
+            count += (end - start) + 1 ; // this is the formula by which can we track count the subarrays      
+            end++ ; // now do end increment  
+         } // after the end of the loop while return the count 
+         return count ;
+
+         */
+         
+        // More optimal solution :
+
+        int curMin = Integer.MAX_VALUE ;
+        int curMax = Integer.MIN_VALUE ;
+        long count = 0 ;
+        int start = 0 ;
+        int end = 0 ;
+        int n = nums.length ;
+        while(end < n){
+            curMin = Math.min(curMin,nums[end]);
+            curMax = Math.max(curMax,nums[end]);
+            if(curMax - curMin > 2){
+                start = end ;
+                curMin = nums[end];
+                curMax = nums[end]; // both cur min and max point same which came next by which windows has disturbed , so it can be max or min both so we made it
+                // now check start be decresing it make subarry or not 
+                while(start - 1 > 0 && Math.abs(nums[end] - nums[start - 1]) <= 2){
+                    start-- ;
+                     curMin = Math.min(curMin,nums[start]);
+                     curMax = Math.max(curMax,nums[start]);
+                }
+            }
+            count += (end - start) + 1 ;
+            end++ ;
+        }
+         return count ;
+
+    }
+}
+
+/********************************************************************************************************

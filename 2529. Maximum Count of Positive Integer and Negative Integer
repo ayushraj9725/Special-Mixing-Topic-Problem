@@ -1,0 +1,101 @@
+
+Problem : 2529. Maximum Count of Positive Integer and Negative Integer
+
+Problem Link : https://leetcode.com/problems/maximum-count-of-positive-integer-and-negative-integer/description/?envType=daily-question&envId=2025-03-12
+
+Probelm Solution :
+
+        //////// **************************** BRUTE FORCE SOLUTION ***************************** \\\\\\\\\\\
+
+  class Solution {
+    public int maximumCount(int[] nums) {
+       
+       // brute force solution :  is using lineear search we are counting num 
+       // It takes : O(N) time and Space : O(1) 
+        int pos = 0 ;
+        int neg = 0 ;
+        int ans = 0 ;
+        for(int i = 0 ; i < nums.length ;i++){
+            if(nums[i] < 0) neg++ ;
+            if(nums[i] > 0) pos++ ;
+            ans = Math.max(pos,neg) ;
+        }
+
+        return ans ;
+     }
+  }
+
+      ////////////  **************************** OPTIMIZED SOLUTION **********************************\\\\\\\\\\\\\
+
+    class Solution {
+    public int maximumCount(int[] nums) {
+
+       // Lets Move to the Optimal Solution : O(logn) 
+       /*
+       " APPROACH "
+        -> Find the last occurrence of a negative number (negEnd) using binary search.
+        -> Find the first occurrence of a positive number (posStart) using binary search.
+        -> Compute the count of negatives (negCount) as negEnd + 1.
+        -> Compute the count of positives (posCount) as n - posStart.
+        -> Return the maximum between negCount and posCount.
+
+       */
+
+         int n = nums.length;
+
+        // Find last index of negative number
+        int negEnd = findLastNegative(nums);
+        // Find first index of positive number
+        int posStart = findFirstPositive(nums);
+
+        // Number of negatives (from index 0 to negEnd)
+        int negCount = negEnd + 1;
+        // Number of positives (from posStart to end)
+        int posCount = n - posStart;
+
+        return Math.max(negCount, posCount);
+     
+
+    }
+    // Binary Search: Find last index of negative number
+    private int findLastNegative(int[] nums) {
+        int left = 0, right = nums.length - 1, lastNeg = -1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] < 0) { // It's negative, move right
+                lastNeg = mid;
+                left = mid + 1;
+            } else { // Move left
+                right = mid - 1;
+            }
+        }
+        return lastNeg; // Last negative index
+    }
+
+    // Binary Search: Find first index of positive number
+    private int findFirstPositive(int[] nums) {
+        int left = 0, right = nums.length - 1, firstPos = nums.length;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > 0) { // It's positive, move left
+                firstPos = mid;
+                right = mid - 1;
+            } else { // Move right
+                left = mid + 1;
+            }
+        }
+        return firstPos; // First positive index
+    }
+    
+}
+
+
+/ /  ******************************* ANOTHER SOLUTION **************************** BINARY SEARCH ************************* \ \
+
+
+
+      

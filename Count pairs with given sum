@@ -1,0 +1,51 @@
+
+
+PROBLEM SOLUTION :  Count pairs with given sum 
+
+class Solution {
+  public:
+    int countPairs(vector<int> &arr, int target) {
+        // Code here
+      unordered_map<int,int> map ;
+      int n = arr.size();
+      int count = 0 ;
+      
+      for(int i = 0 ; i < n ; i++){
+          int num = arr[i] ;
+          int req = target - num ;
+          
+          if(map.find(req) != map.end()){
+             count += map[req] ; // if found already in the map any key that frequncy add into count
+          }
+          
+          map[num]++ ; // otherwise that number set that key of map and having frequncy 0+1 
+      }
+      
+      return count ;  // at the end of the loop we have the final answer in the count variabl
+      
+      // for we are achieving this , we have to taken a map of O(N) space and it reduce the timeO(N) time
+
+
+
+      ////////////////////////////////// BRUTE FORCE SOLUTION 
+
+
+
+      /*  
+        int n = arr.size();
+        int count = 0 ;
+        for(int i = 0 ; i < n ;i++){
+            for(int j = i + 1 ; j < n ; j++){
+                if(arr[i] + arr[j] == target) count++ ;
+            }
+        }
+        
+        return count ;
+        
+        // this program native approach taking more time to find the pair of sum O(N * N)time
+        */
+    }
+};
+
+
+

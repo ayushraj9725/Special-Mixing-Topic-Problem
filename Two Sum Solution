@@ -58,3 +58,50 @@ class Solution {
          */
     }
 }
+
+
+
+ CPP CODE :::::::::::::::::;;;
+
+
+class Solution {
+  public:
+    bool twoSum(vector<int>& arr, int target) {
+        // code here
+        
+        
+        // better Solution 
+         int n = arr.size(); 
+         // we are going to apply the Greedy and Two Pointer Approach 
+         // in 1st step we have to sort the array .
+          sort(arr.begin(),arr.end()); // arr has sorted 
+         
+          int i = 0 , j = n - 1 ;
+          int sum = 0 ;
+          while(i < j){
+              sum = arr[i] + arr[j] ;
+              
+              if(sum == target) return true ;
+              
+              if(sum < target) i++ ;  // check the sum if less then target than i incr
+              else j-- ;  // other wise j decrement 
+              
+          }
+          return false ; // other wise we return false  
+          
+        
+        /*
+         // Brute Force Solution :
+         int n = arr.size() ;
+         for(int i = 0 ; i < n ; i++){
+             for(int j = i ; j < n ;j++){
+                 if(arr[i] + arr[j] == target) return true ;
+             }
+         }
+         
+         return false ;
+         */
+    }
+};
+
+

@@ -1,0 +1,97 @@
+
+
+PROBLEM SOLUTON  :: Find all pairs with a given sum in two unsorted arrays
+
+
+CODE :  
+
+   CPP IMPLEMENTATION  
+
+   class Solution {
+  public:
+    // Function to find all pairs with given sum.
+    vector<pair<int, int>> allPairs(int target, vector<int> &arr1, vector<int> &arr2) {
+        // Code here
+    
+    unordered_map<int, int> freq1, freq2;
+    
+    // Store frequencies of elements in arr1
+    for (int num : arr1) {
+        freq1[num]++;
+    }
+    
+    // Store frequencies of elements in arr2
+    for (int num : arr2) {
+        freq2[num]++;
+    }
+
+    vector<pair<int, int>> ans;
+
+    // Iterate over arr1's map
+    for (auto &p : freq1) {
+        int num = p.first;
+        int count1 = p.second;
+        int complement = target - num;
+
+        // If complement exists in arr2's map
+        if (freq2.find(complement) != freq2.end()) {
+            int count2 = freq2[complement];
+
+            // Add all possible occurrences
+            for (int i = 0; i < count1; i++) {
+                for (int j = 0; j < count2; j++) {
+                    ans.push_back({num, complement});
+                }
+            }
+        }
+    }
+
+    // Sort to match the expected output format
+    sort(ans.begin(), ans.end());
+
+    return ans;
+    
+    
+   /* /// 1st 1  : decleaded set multiset initially 
+    multiset<int> set(arr2.begin(),arr2.end());
+    
+    vector<pair<int,int>> ans ;
+    
+    for(int num : arr1){
+        int searchValue = target - num;
+        if(set.count(searchValue)){
+            ans.push_back({num,searchValue});
+            set.erase(set.find(searchValue));  // Remove only one occurrence
+        }
+    }
+    
+    sort(ans.begin(),ans.end());
+    
+    return ans ;  // still it is not giving correct output 
+    
+    
+    /*  // this is correct but not handling the correct output for duplicates so lets try to fix usinng multy set
+    
+    // set<int> set; // set do not work here we have to use here map
+    unordered_map<int,int> mp ;
+    for(int i = 0 ; i < arr2.size() ; i++){
+        mp[arr2[i]]++;
+    }
+    
+    vector<pair<int,int>> ans ;
+    for(int i = 0 ; i < arr1.size() ;i++){
+        int searchValue = target - arr1[i];
+        while(mp.find(searchValue) != mp.end() && mp[searchValue] > 0){
+            ans.push_back({arr1[i],searchValue});
+            // if(mp[searchValue] > 1) mp[searchValue]-- ;
+            mp[searchValue]-- ;
+        }
+        
+    }
+    sort(ans.begin(),ans.end());
+    
+    return ans ;
+        */
+        
+    }
+};
